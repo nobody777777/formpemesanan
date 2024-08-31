@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/logokayzen.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Formulir Pemesanan</title>
+    <link rel="stylesheet" href="styles.css" />
+</head>
+
+<body>
+    <div class="container">
+        <h1>Formulir Pemesanan</h1>
+        <form id="registrationForm">
+            <input type="text" name="nama" placeholder="Nama" required>
+            <input type="tel" name="noWa" placeholder="Nomor WhatsApp" pattern="[0-9]*" inputmode="numeric" required>
+            <select name="provinsi" id="provinsi" required>
+                <option value="">Pilih Provinsi</option>
+                <option value="Bali">Bali</option>
+                <option value="Kepulauan Bangka Belitung">Kepulauan Bangka Belitung</option>
+                <option value="Banten">Banten</option>
+                <option value="Bengkulu">Bengkulu</option>
+                <option value="DI Yogyakarta">DI Yogyakarta</option>
+                <option value="DKI Jakarta">DKI Jakarta</option>
+                <option value="Gorontalo">Gorontalo</option>
+                <option value="Jambi">Jambi</option>
+                <option value="Jawa Barat">Jawa Barat</option>
+                <option value="Jawa Tengah">Jawa Tengah</option>
+                <option value="Jawa Timur">Jawa Timur</option>
+                <option value="Kalimantan Barat">Kalimantan Barat</option>
+                <option value="Kalimantan Selatan">Kalimantan Selatan</option>
+                <option value="Kalimantan Tengah">Kalimantan Tengah</option>
+                <option value="Kalimantan Timur">Kalimantan Timur</option>
+                <option value="Kalimantan Utara">Kalimantan Utara</option>
+                <option value="Kepulauan Riau">Kepulauan Riau</option>
+                <option value="Lampung">Lampung</option>
+                <option value="Maluku">Maluku</option>
+                <option value="Maluku Utara">Maluku Utara</option>
+                <option value="Aceh">Nanggroe Aceh Darussalam</option>
+                <option value="Nusa Tenggara Barat">Nusa Tenggara Barat</option>
+                <option value="Nusa Tenggara Timur">Nusa Tenggara Timur</option>
+                <option value="Papua">Papua</option>
+                <option value="Papua Barat">Papua Barat</option>
+                <option value="Riau">Riau</option>
+                <option value="Sulawesi Barat">Sulawesi Barat</option>
+                <option value="Sulawesi Selatan">Sulawesi Selatan</option>
+                <option value="Sulawesi Tengah">Sulawesi Tengah</option>
+                <option value="Sulawesi Tenggara">Sulawesi Tenggara</option>
+                <option value="Sulawesi Utara">Sulawesi Utara</option>
+                <option value="Sumatera Barat">Sumatera Barat</option>
+                <option value="Sumatera Selatan">Sumatera Selatan</option>
+                <option value="Sumatera Utara">Sumatera Utara</option>
+            </select>
+            <select name="kabupaten" id="kabupaten" required>
+                <option value="">Pilih Kabupaten</option>
+            </select>
+            <select name="kecamatan" id="kecamatan" required>
+                <option value="">Pilih Kecamatan</option>
+            </select>
+            <textarea name="alamatLengkap" placeholder="Alamat Lengkap: Jalan Malioboro, Kampung Durian, RT 02 / RW 04"
+                required></textarea>
+            <textarea name="patokanRumah"
+                placeholder="Patokan Rumah: Samping Mesjid Al-Falah, rumah cat kuning dengan pagar besi"
+                style="width: 92%; height: 60px;"></textarea>
+            <button type="submit">Kirim ke WhatsApp</button>
+        </form>
+    </div>
+
+    <script src="data.js"></script>
+    <script>
+        const provinsiSelect = document.getElementById('provinsi');
+        const kabupatenSelect = document.getElementById('kabupaten');
+        const kecamatanSelect = document.getElementById('kecamatan');
+
+        provinsiSelect.addEventListener('change', function () {
+            const selectedProvinsi = this.value;
+            kabupatenSelect.innerHTML = '<option value="">Pilih Kabupaten</option>';
+            kecamatanSelect.innerHTML = '<option value="">Pilih Kecamatan</option>';
+            if (selectedProvinsi && data[selectedProvinsi]) {
+                data[selectedProvinsi].kabupaten.forEach(function (kabupaten) {
+                    const option = document.createElement('option');
+                    option.value = kabupaten;
+                    option.textContent = kabupaten;
+                    kabupatenSelect.appendChild(option);
+                });
+            }
+        });
+
+        kabupatenSelect.addEventListener('change', function () {
+            const selectedKabupaten = this.value;
+            kecamatanSelect.innerHTML = '<option value="">Pilih Kecamatan</option>';
+            if (selectedKabupaten && data[provinsiSelect.value].kecamatan[selectedKabupaten]) {
+                data[provinsiSelect.value].kecamatan[selectedKabupaten].forEach(function (kecamatan) {
+                    const option = document.createElement('option');
+                    option.value = kecamatan;
+                    option.textContent = kecamatan;
+                    kecamatanSelect.appendChild(option);
+                });
+            }
+        });
+
+        document.querySelector('input[name="noWa"]').addEventListener('input', function (e) {
+            this.value = this.value.replace(/[^0-9]/g, '');
+        });
+
+        document.getElementById('registrationForm').addEventListener('submit', function (e) {
+            e.preventDefault();
+            const formData = new FormData(this);
+            let message = 'Kak Admin,Saya Ingin Pesan Barangnya Dengan Alamat Rumah Saya Sebagai berikut :                                                                                                                                     ';
+            for (let [key, value] of formData.entries()) {
+                message += `${key}: ${value}%0A`;
+            }
+            window.open(`https://wa.me/6285794040978?text=${message}`, '_blank');
+        });
+    </script>
+</body>
+
+</html>
